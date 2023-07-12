@@ -1,9 +1,9 @@
 import tcod
 
-from actions import EscapeAction, MovementAction
-from entity import Entity
-from input_handlers import EventHandler
 from engine import Engine
+from entity import Entity
+from game_map import GameMap
+from input_handlers import EventHandler
 
 def draw_entity(console:tcod.console.Console, entity:Entity):
     console.print(x=entity.x, y=entity.y, string=entity.char, fg = entity.color)
@@ -14,6 +14,10 @@ def main() -> None:
 
     screen_width = 80
     screen_height = 50
+
+    map_width = 80
+    map_height = 45
+
     game_title = 'Yet Another Roguelike Tutorial'
 
     tileset = tcod.tileset.load_tilesheet(
@@ -26,7 +30,9 @@ def main() -> None:
     npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), "@", (255, 255, 0))
     entities = {npc, player}
 
-    engine = Engine(entities, event_handler, player)
+    game_map = GameMap(map_width, map_height)
+
+    engine = Engine(entities, event_handler, game_map, player)
 
     with tcod.context.new_terminal(
         screen_width,

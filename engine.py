@@ -6,11 +6,13 @@ from tcod.console import Console
 from actions import EscapeAction, MovementAction
 from entity import Entity
 from input_handlers import EventHandler
+from game_map import GameMap
 
 class Engine:
-    def __init__(self, entities: Set[Entity], event_handler: EventHandler, player: Entity) -> None:
+    def __init__(self, entities: Set[Entity], event_handler: EventHandler, game_map: GameMap, player: Entity) -> None:
         self.entities = entities
         self.event_handler = event_handler
+        self.game_map = game_map
         self.player = player
 
     def handle_events(self, events: Iterable[Any]) -> None:
@@ -21,12 +23,15 @@ class Engine:
                 continue
 
             if isinstance(action, MovementAction):
-                self.player.move(action.dx, action.dy)
+                if self.game_map.tiles["walkable"][self.player.x + action.dx, self.player.y + action.dy]:
+                    self.player.move(action.dx, action.dy)
 
             elif isinstance(action, EscapeAction):
                 raise SystemExit()
 
     def render(self, console: Console, context: Context) -> None:
+        self.game_map.render(console)
+
         for entity in self.entities:
             console.print(entity.x, entity.y, entity.char, entity.color)
 
