@@ -29,7 +29,7 @@ def main() -> None:
     # )
 
     tileset = tcod.tileset.load_tilesheet(
-        'assets/dejavu10x10_gs_tc.png', 32, 8, tcod.tileset.CHARMAP_TCOD
+        'assets/terminus11x11_df_cp437.png', 16, 16, tcod.tileset.CHARMAP_CP437
     )
 
     event_handler = EventHandler()
