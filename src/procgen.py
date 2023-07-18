@@ -30,6 +30,14 @@ class RectangularRoom:
         """Return the inner area of this room as a 2D array index."""
         return slice(self.x1 + 1, self.x2), slice(self.y1 + 1, self.y2)
 
+    def contains(self, point: Tuple[int, int]) -> bool:
+        """Return true if point is inside this room."""
+        x, y = point
+        return (
+            self.x1 < x and x < self.x2 and
+            self.y1 < y and y < self.y2
+        )
+
     def intersects(self, other: RectangularRoom) -> bool:
         """Return true if this intersects with the other RectangularRoom."""
         return (
@@ -54,9 +62,9 @@ def tunnel_between(
         corner_x, corner_y = x1, y2
 
     # Generate the coordinates for this tunnel.
-    for x, y in tcod.los.bresenham((x1, y1), (corner_x, corner_y)).tolist():
+    for x, y in tcod.los.bresenham((x1, y1), (corner_x, corner_y)).tolist()[1:-1]:
         yield x, y
-    for x, y in tcod.los.bresenham((corner_x, corner_y), (x2, y2)).tolist():
+    for x, y in tcod.los.bresenham((corner_x, corner_y), (x2, y2)).tolist()[:-1]:
         yield x, y
 
 def generate_dungeon(
@@ -76,10 +84,10 @@ def generate_dungeon(
         room_width = random.randint(room_min_size, room_max_size)
         room_height = random.randint(room_min_size, room_max_size)
 
-        x = random.randint(0, dungeon.width - room_width - 1)
-        y = random.randint(0, dungeon.height - room_height - 1)
+        room_x = random.randint(0, dungeon.width - room_width - 1)
+        room_y = random.randint(0, dungeon.height - room_height - 1)
 
-        new_room = RectangularRoom(x, y, room_width, room_height)
+        new_room = RectangularRoom(room_x, room_y, room_width, room_height)
 
         # returns true (and discards) if the new room intersects any previous room
         if any(new_room.intersects(other_room) for other_room in rooms):
@@ -92,8 +100,12 @@ def generate_dungeon(
             # Place player in first room
             player.x, player.y = new_room.center
         else:
-            # Tunnel from previous room to this room
-            for x, y in tunnel_between(rooms[-1].center, new_room.center):
+            # Tunnel from THIS room to previous room (order matters!)
+            for x, y in tunnel_between(new_room.center, rooms[-1].center):
+                # Reduce redundant tunnels. If you hit a tile that's already floor (but not part of this room), end the tunnel there.
+                # It's already connected to the dungeon.
+                if dungeon.tiles[x, y] == tile_types.floor and not new_room.contains((x, y)):
+                    break
                 dungeon.tiles[x, y] = tile_types.floor
         
         rooms.append(new_room)
