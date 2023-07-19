@@ -1,11 +1,19 @@
+from __future__ import annotations
+
+from typing import Iterable, TYPE_CHECKING
+
 import numpy as np
 from tcod.console import Console
 
 import tile_types
 
+if TYPE_CHECKING:
+    from entity import Entity
+
 class GameMap:
-    def __init__(self, width: int, height: int) -> None:
+    def __init__(self, width: int, height: int, entities: Iterable[Entity] = ()) -> None:
         self.width, self.height = width, height
+        self.entities = set(entities)
         self.tiles = np.full((width, height), fill_value=tile_types.wall, order="F")
 
         self.visible = np.full((width, height), fill_value=False, order="F") # Tiles the player can currently see
@@ -23,8 +31,15 @@ class GameMap:
         If it isn't, but it's in the "explored" array, then draw it with the "dark" colors.
         Otherwise, the default is "SHROUD".
         """
+        # Draw map
         console.rgb[0:self.width, 0:self.height] = np.select(
             condlist=[self.visible, self.explored],
             choicelist=[self.tiles["light"], self.tiles["dark"]],
             default=tile_types.SHROUD
         )
+        
+        # Draw entities
+        for entity in self.entities:
+            # Only print entities that are in FOV
+            if self.visible[entity.x, entity.y]:
+                console.print(entity.x, entity.y, entity.char, entity.color)
