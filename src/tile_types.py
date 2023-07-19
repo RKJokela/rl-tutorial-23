@@ -1,5 +1,4 @@
 from typing import Tuple
-
 import numpy as np
 
 # Tile graphics structured type compatible with Console.tiles_rgb.
@@ -43,8 +42,8 @@ SHROUD = np.array((CHAR_SHROUD, (255, 255, 255), (0, 0, 0)), dtype=graphic_dt)
 floor = new_tile(
     walkable=True,
     transparent=True,
-    dark=(CHAR_FLOOR, (255, 255, 255), (75, 75, 150)),
-    light=(CHAR_FLOOR, (255, 255, 255), (100, 100, 175))
+    dark=(CHAR_FLOOR, (255, 255, 255), (50, 50, 100)),
+    light=(CHAR_FLOOR, (255, 255, 255), (75, 75, 150))
 )
 wall = new_tile(
     walkable=False,

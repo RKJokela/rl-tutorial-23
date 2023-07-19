@@ -1,12 +1,11 @@
+#!.venv/Scripts/python
 import tcod
+import copy
 
 from engine import Engine
-from entity import Entity
+import entity_factories as ef
 from input_handlers import EventHandler
 from procgen import generate_dungeon
-
-def draw_entity(console:tcod.console.Console, entity:Entity):
-    console.print(x=entity.x, y=entity.y, string=entity.char, fg = entity.color)
 
 def main() -> None:
     tcod_ver = tcod.__version__
@@ -22,6 +21,8 @@ def main() -> None:
     room_max_size = 10
     max_rooms = 30
 
+    max_monsters_per_room = 2
+
     game_title = 'Yet Another Roguelike Tutorial'
 
     # tileset = tcod.tileset.load_tilesheet(
@@ -34,9 +35,9 @@ def main() -> None:
 
     event_handler = EventHandler()
 
-    player = Entity(int(screen_width / 2), int(screen_height / 2), "@", (255, 255, 255))
+    player = copy.deepcopy(ef.player)
 
-    game_map = generate_dungeon(max_rooms, room_min_size, room_max_size, map_width, map_height, player)
+    game_map = generate_dungeon(max_rooms, room_min_size, room_max_size, map_width, map_height, max_monsters_per_room, player)
 
     engine = Engine(event_handler, game_map, player)
 

@@ -1,5 +1,4 @@
 from typing import Iterable, Any
-
 from tcod.context import Context
 from tcod.console import Console
 from tcod.map import compute_fov
