@@ -72,7 +72,6 @@ class MovementAction(ActionWithDirection):
             print("You bump into the wall.")
             return  # Destination can be walked on
         if self.engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
-            print("INVALID CODE PATH: MovementAction is blocked by entity. Should be MeleeAction!")
             return  # Destination is blocked by an entity
         
         self.entity.move(self.dx, self.dy)
@@ -83,3 +82,7 @@ class BumpAction(ActionWithDirection):
             return MeleeAction(self.entity, self.dx, self.dy).perform()
 
         return MovementAction(self.entity, self.dx, self.dy).perform()
+
+class WaitAction(Action):
+    def perform(self) -> None:
+        pass
