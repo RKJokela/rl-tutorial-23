@@ -12,7 +12,7 @@
 - [x] Part 4 - Field of view
 - [x] Part 5 - Placing enemies and kicking them (harmlessly)
 - [x] Part 6 - Doing (and taking) some damage
-- [ ] Part 7 - Creating the Interface
+- [x] Part 7 - Creating the Interface
 - [ ] Part 8 - Items and Inventory
 - [ ] Part 9 - Ranged Scrolls and Targeting
 - [ ] Part 10 - Saving and loading
