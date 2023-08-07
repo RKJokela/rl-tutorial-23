@@ -47,9 +47,10 @@ class RectangularRoom:
         )
 
 def place_entities(
-    room: RectangularRoom, dungeon: GameMap, max_monsters: int
+    room: RectangularRoom, dungeon: GameMap, max_monsters: int, max_items: int
 ) -> None:
     num_monsters = random.randint(0, max_monsters)
+    num_items = random.randint(0, max_items)
 
     for i in range(num_monsters):
         x = random.randint(room.x1 + 1, room.x2 - 1)
@@ -60,6 +61,13 @@ def place_entities(
                 ef.orc.spawn(dungeon, x, y)
             else:
                 ef.troll.spawn(dungeon, x, y)
+
+    for i in range(num_items):
+        x = random.randint(room.x1 + 1, room.x2 - 1)
+        y = random.randint(room.y1 + 1, room.y2 - 1)
+
+        if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+            ef.health_potion.spawn(dungeon, x, y)
 
 def tunnel_between(
     start: Tuple[int, int],
@@ -88,9 +96,12 @@ def generate_dungeon(
     map_width: int, 
     map_height: int,
     max_monsters_per_room: int,
+    max_items_per_room: int,
     engine: Engine
 ) -> GameMap:
-    """Generate a new dungeon map"""
+    """
+    Generate a new dungeon map
+    """
     player = engine.player
     
     dungeon = GameMap(engine, map_width, map_height, entities=[player])
@@ -113,7 +124,7 @@ def generate_dungeon(
         # Room is valid. Dig out its area
         dungeon.tiles[new_room.inner] = tile_types.floor
 
-        place_entities(new_room, dungeon, max_monsters_per_room)
+        place_entities(new_room, dungeon, max_monsters_per_room, max_items_per_room)
 
         if len(rooms) == 0:
             # Place player in first room
