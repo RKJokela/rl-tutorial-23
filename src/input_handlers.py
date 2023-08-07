@@ -8,8 +8,7 @@ import tcod
 import actions
 from actions import (
     Action,
-    BumpAction, 
-    EscapeAction,
+    BumpAction,
     PickupAction,
     WaitAction,
 )
@@ -268,7 +267,7 @@ class MainGameEventHandler(EventHandler):
 
         # QUIT GAME
         elif key == tcod.event.KeySym.ESCAPE:
-            action = EscapeAction(player)
+            raise SystemExit()
 
         # No valid key was pressed
         return action
