@@ -55,6 +55,36 @@ class ItemAction(Action):
         """
         self.item.consumable.activate(self)
 
+class PickupAction(Action):
+    """
+    Pick up an item and add it to the inventory if there is room
+    """
+    def __init__(self, entity: Actor) -> None:
+        super().__init__(entity)
+
+    def perform(self) -> None:
+        actor_loc_x = self.entity.x
+        actor_loc_y = self.entity.y
+        inventory = self.entity.inventory
+
+        for item in self.engine.game_map.items:
+            if actor_loc_x == item.x and actor_loc_y == item.y:
+                if len(inventory.items) >= inventory.capacity:
+                    raise exceptions.Impossible("Your inventory is full.")
+                
+                self.engine.game_map.entities.remove(item)
+                item.parent = self.entity.inventory
+                inventory.items.append(item)
+
+                self.engine.message_log.add_message(f"You picked up the {item.name}!")
+                return
+
+        raise exceptions.Impossible("There is nothing here to pick up.")
+
+class DropItem(ItemAction):
+    def perform(self) -> None:
+        self.entity.inventory.drop(self.item)
+
 class EscapeAction(Action):
     def perform(self) -> None:
         raise SystemExit()
