@@ -17,3 +17,12 @@ health_recovered = (0x0, 0xFF, 0x0)
 bar_text = white
 bar_filled = (0x0, 0x60, 0x0)
 bar_empty = (0x40, 0x10, 0x10)
+
+player_color = (255, 255, 255)
+
+# Enemies
+monster_orc = (127, 191, 127)
+monster_troll = (63, 191, 63)
+
+# Items
+health_potion = (127, 0, 255)

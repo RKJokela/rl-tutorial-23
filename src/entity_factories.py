@@ -6,7 +6,7 @@ from entity import Actor, Item
 
 player = Actor(
     char="@", 
-    color=(255, 255, 255),
+    color=color.player_color,
     name="Player",
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=30, defense=2, power=5)
@@ -14,7 +14,7 @@ player = Actor(
 
 orc = Actor(
     char="o", 
-    color=(127, 191, 127),
+    color=color.monster_orc,
     name="Orc",
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=10, defense=0, power=3)
@@ -22,7 +22,7 @@ orc = Actor(
 
 troll = Actor(
     char="T", 
-    color=(63, 191, 63),
+    color=color.monster_troll,
     name="Troll",
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=16, defense=1, power=4)
@@ -30,7 +30,7 @@ troll = Actor(
 
 health_potion = Item(
     char='!',
-    color=(127, 0, 255),
+    color=color.health_potion,
     name="Health Potion",
     consumable=HealingConsumable(amount=5)
 )
